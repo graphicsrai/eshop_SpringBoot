@@ -1,5 +1,6 @@
 package com.eshop.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.eshop.dto.UserDto;
 import com.eshop.impl.ServiceImpl;
+import com.eshop.mapper.UserMapperImpl;
 import com.eshop.model.User;
 
 @RestController
@@ -23,6 +26,8 @@ import com.eshop.model.User;
 public class Controller {
 	@Autowired
 	private ServiceImpl serviceImpl;
+	@Autowired
+	private UserMapperImpl usermapperImpl;
 	
 	@RequestMapping("/welcome")
 	public String welcome()
@@ -44,16 +49,21 @@ public class Controller {
 	}
 	
 	@GetMapping
-	public ResponseEntity <List<User>> getAllUsers()
+	public ResponseEntity<List<UserDto>> getAllUsers()
 	{
 		List<User> l1= serviceImpl.getallUser();
-		if(l1!=null)
+		List<UserDto> dto=new ArrayList<UserDto>();
+		for(User u1:l1)
 		{
-			return ResponseEntity.status(200).body(l1);
+			dto.add(usermapperImpl.addDto(u1));
+		}
+		if(dto!=null)
+		{
+			return ResponseEntity.status(200).body(dto);
 		}
 		else
 		{
-			return ResponseEntity.status(400).body(l1);
+			return ResponseEntity.status(400).body(dto);
 		}
 	}
 	@PutMapping

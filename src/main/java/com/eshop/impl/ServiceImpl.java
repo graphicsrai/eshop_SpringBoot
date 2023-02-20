@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.eshop.dto.UserDto;
 import com.eshop.model.User;
 import com.eshop.repo.UserRepo;
 import com.eshop.service.UserService;

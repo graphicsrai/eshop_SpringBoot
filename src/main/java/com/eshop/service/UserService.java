@@ -2,6 +2,7 @@ package com.eshop.service;
 
 import java.util.List;
 
+import com.eshop.dto.UserDto;
 import com.eshop.model.User;
 
 public interface UserService {
