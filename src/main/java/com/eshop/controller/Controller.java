@@ -2,6 +2,7 @@ package com.eshop.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eshop.dto.UserDto;
+import com.eshop.exception.ControllerException2;
 import com.eshop.impl.ServiceImpl;
 import com.eshop.mapper.UserMapperImpl;
 import com.eshop.model.User;
@@ -34,17 +36,35 @@ public class Controller {
 	{
 		return "Its working";
 	}
-	
-	@PostMapping
-	public ResponseEntity<String> addUser(@RequestBody User user)
+	@GetMapping("login")
+	public ResponseEntity<String>login(@RequestHeader Map<String,String> map)
 	{
-		String msg=serviceImpl.addUser(user);
-		if(msg!=null) {
+		String msg=serviceImpl.login(map);
+		if(msg!=null)
+		{
 			return ResponseEntity.status(200).body(msg);
 		}
 		else
-		{
 			return ResponseEntity.status(400).body(msg);
+	}
+	
+	@PostMapping("/signup")
+	public ResponseEntity<String> addUser(@RequestBody User user)
+	{
+		String msg=serviceImpl.addUser(user);
+		try {
+			if(msg==null) {
+				throw new ControllerException2("602","user does not exist");
+//				return ResponseEntity.status(200).body(msg);
+			}
+			else
+			{
+				return ResponseEntity.status(200).body(msg);
+//				return ResponseEntity.status(400).body(msg);
+			}
+		}catch(Exception e)
+		{
+			throw new ControllerException2("603","Something went wrong"+e.getMessage());
 		}
 	}
 	
